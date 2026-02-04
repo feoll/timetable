@@ -16,29 +16,12 @@
             background: #f4f6fa;
             padding: 0;
             color: #333;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Стили для снежинок */
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            color: white;
-            font-size: 1em;
-            pointer-events: none;
-            z-index: 9998;
-            user-select: none;
-            opacity: 0.8;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px;
-            position: relative;
-            z-index: 1;
         }
 
         header {
@@ -47,8 +30,6 @@
             padding: 25px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 25px;
-            position: relative;
-            z-index: 2;
         }
 
         .header-content {
@@ -153,8 +134,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 2px solid transparent;
-            position: relative;
-            z-index: 1;
         }
 
         .day-card:hover {
@@ -315,42 +294,6 @@
             border-top: 1px solid #e0e3eb;
             color: #666;
             font-size: 0.9rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Кнопка управления снегом */
-        .snow-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(74, 108, 255, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .snow-toggle:hover {
-            background: rgba(74, 108, 255, 1);
-            transform: scale(1.1);
-        }
-
-        .snow-toggle i {
-            transition: transform 0.3s ease;
-        }
-
-        .snow-toggle.active i {
-            transform: rotate(180deg);
         }
 
         /* Мобильная адаптация */
@@ -401,14 +344,6 @@
             .controls {
                 align-items: center;
             }
-            
-            .snow-toggle {
-                bottom: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
         }
 
         @media (max-width: 480px) {
@@ -452,14 +387,6 @@
                 right: -30px;
                 font-size: 0.65rem;
                 padding: 3px 22px;
-            }
-            
-            .snow-toggle {
-                bottom: 10px;
-                right: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
             }
         }
 
@@ -507,8 +434,6 @@
     </style>
 </head>
 <body>
-    <!-- Снегопад будет генерироваться здесь -->
-    
     <header>
         <div class="container">
             <div class="header-content">
@@ -523,20 +448,7 @@
                     <button onclick="showWeek(2)">2 неделя</button>
                 </div>
                 
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color legend-kp"></div>
-                        <span>Курсовой проект</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color legend-l"></div>
-                        <span>Лекция</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color legend-pz"></div>
-                        <span>Практическое занятие</span>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </header>
@@ -546,13 +458,8 @@
     </main>
 
     <footer class="container">
-        <p>© 2024 Расписание занятий. Все права защищены.</p>
+        <!-- Текст удален по требованию -->
     </footer>
-
-    <!-- Кнопка управления снегом -->
-    <button class="snow-toggle" id="snowToggle" title="Включить/выключить снег">
-        <i class="fas fa-snowflake"></i>
-    </button>
 
     <script>
         const data = {
@@ -709,117 +616,6 @@
             });
         }
 
-        // ============== КОД ДЛЯ СНЕГОПАДА ==============
-        let isSnowing = true;
-        let snowflakes = [];
-        const snowToggle = document.getElementById('snowToggle');
-
-        function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.className = 'snowflake';
-            
-            // Случайный символ снежинки
-            const snowSymbols = ['❄', '❅', '❆', '*', '·'];
-            snowflake.textContent = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
-            
-            // Случайный размер и прозрачность
-            const size = Math.random() * 1.5 + 0.8;
-            snowflake.style.fontSize = size + 'em';
-            snowflake.style.opacity = Math.random() * 0.7 + 0.3;
-            
-            // Начальная позиция
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            
-            // Случайная скорость и колебания
-            snowflake.speed = Math.random() * 1.5 + 0.5;
-            snowflake.wave = Math.random() * 2;
-            snowflake.waveSpeed = Math.random() * 0.03 + 0.01;
-            snowflake.waveSize = Math.random() * 30 + 10;
-            
-            document.body.appendChild(snowflake);
-            snowflakes.push(snowflake);
-            
-            return snowflake;
-        }
-
-        function animateSnow() {
-            if (!isSnowing) return;
-            
-            snowflakes.forEach((snowflake, index) => {
-                // Получаем текущие позиции
-                let top = parseFloat(snowflake.style.top) || -20;
-                let left = parseFloat(snowflake.style.left) || 0;
-                
-                // Движение вниз
-                top += snowflake.speed;
-                
-                // Боковое колебание
-                const waveOffset = Math.sin(top * snowflake.waveSpeed) * snowflake.waveSize;
-                left += waveOffset * 0.05;
-                
-                // Обновляем позицию
-                snowflake.style.top = top + 'px';
-                snowflake.style.left = left + 'px';
-                
-                // Если снежинка упала за пределы экрана, перемещаем её наверх
-                if (top > window.innerHeight) {
-                    snowflake.style.top = '-20px';
-                    snowflake.style.left = Math.random() * 100 + 'vw';
-                    
-                    // Обновляем свойства для разнообразия
-                    snowflake.speed = Math.random() * 1.5 + 0.5;
-                    snowflake.waveSpeed = Math.random() * 0.03 + 0.01;
-                }
-                
-                // Если снежинка улетела слишком далеко вбок, корректируем
-                if (left > window.innerWidth + 50) {
-                    snowflake.style.left = '-50px';
-                } else if (left < -50) {
-                    snowflake.style.left = (window.innerWidth + 50) + 'px';
-                }
-            });
-            
-            requestAnimationFrame(animateSnow);
-        }
-
-        function startSnow() {
-            if (!isSnowing) {
-                isSnowing = true;
-                snowToggle.classList.add('active');
-                
-                // Создаем снежинки
-                for (let i = 0; i < 80; i++) {
-                    createSnowflake();
-                    // Размещаем снежинки на разной высоте
-                    snowflakes[i].style.top = Math.random() * 100 + 'vh';
-                }
-                
-                animateSnow();
-            }
-        }
-
-        function stopSnow() {
-            isSnowing = false;
-            snowToggle.classList.remove('active');
-            
-            // Удаляем снежинки
-            snowflakes.forEach(snowflake => {
-                if (snowflake.parentNode) {
-                    snowflake.parentNode.removeChild(snowflake);
-                }
-            });
-            snowflakes = [];
-        }
-
-        function toggleSnow() {
-            if (isSnowing) {
-                stopSnow();
-            } else {
-                startSnow();
-            }
-        }
-
-        // Инициализация снегопада
         document.addEventListener('DOMContentLoaded', function() {
             // Обновляем время при загрузке
             updateMinskTime();
@@ -829,12 +625,6 @@
             
             // Показываем первую неделю
             showWeek(1);
-            
-            // Запускаем снегопад через небольшую задержку
-            setTimeout(startSnow, 1000);
-            
-            // Вешаем обработчик на кнопку
-            snowToggle.addEventListener('click', toggleSnow);
             
             function handleResize() {
                 // Адаптивная логика при необходимости
