@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -431,6 +432,255 @@
                 border-radius: 4px;
             }
         }
+        <style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #f8fff4 0%, #f0f9ff 100%);
+        padding: 0;
+        color: #2c5530;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    header {
+        background: linear-gradient(135deg, #7bc043 0%, #8ed081 100%);
+        color: #2c5530;
+        padding: 30px 0;
+        box-shadow: 0 4px 15px rgba(124, 192, 67, 0.15);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    h1::before {
+        content: '🌱';
+        font-size: 1.8rem;
+    }
+
+    .current-time {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-top: 8px;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        padding: 5px 15px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .controls {
+        margin-top: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .week-switch {
+        display: flex;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 8px;
+        width: fit-content;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+    }
+
+    .week-switch button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        background: transparent;
+        font-weight: 700;
+        color: #2c5530;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .week-switch button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .week-switch button.active {
+        background: #ffffff;
+        color: #7bc043;
+        box-shadow: 0 4px 12px rgba(124, 192, 67, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 0.9rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
+    }
+
+    .legend-color {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .legend-kp {
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    .legend-l {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    }
+
+    .legend-pz {
+        background: linear-gradient(135deg, #d4fc79, #96e6a1);
+    }
+
+    .schedule {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+
+    .day-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(124, 192, 67, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    .day-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #7bc043, #8ed081);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .day-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(124, 192, 67, 0.2);
+    }
+
+    .day-card:hover::before {
+        opacity: 1;
+    }
+
+    .day-card.current-day {
+        border-color: #7bc043;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 255, 242, 0.9));
+        border: 2px solid #7bc043;
+    }
+
+    .day-card.current-day::after {
+        content: '🌸';
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .day-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: #4a7c59;
+        padding-bottom: 15px;
+        border-bottom: 3px dashed #e0f0d9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .day-card.current-day .day-title {
+        color: #2c5530;
+    }
+
+    .day-count {
+        background: linear-gradient(135deg, #7bc043, #8ed081);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+    }
+    /* Убираем плашку "Сегодня" на десктопах и планшетах */
+.day-card.current-day::before {
+    display: none !important;
+}
+
+/* Убираем плашку "Сегодня" на мобильных */
+@media (max-width: 360px) {
+    .day-card.current-day::after {
+        display: none !important;
+    }
+}
     </style>
 </head>
 <body>
