@@ -2,70 +2,210 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание занятий</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
-            font-family: Inter, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
             margin: 0;
             background: #f4f6fa;
-            padding: 20px;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a6cff, #6b8cff);
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-time {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
         }
 
         .week-switch {
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 5px;
+            width: fit-content;
         }
 
         .week-switch button {
-            padding: 10px 18px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            background: #e0e3eb;
+            background: transparent;
             font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
         }
 
         .week-switch button.active {
+            background: white;
+            color: #4a6cff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-kp {
+            background: #ff4a4a;
+        }
+
+        .legend-l {
+            background: #ff69b4;
+        }
+
+        .legend-pz {
             background: #4a6cff;
-            color: white;
         }
 
         .schedule {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
+            gap: 18px;
+            margin-bottom: 40px;
         }
 
         .day-card {
             background: white;
             border-radius: 14px;
-            padding: 14px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .day-card.current-day {
+            border-color: #4a6cff;
+            background: linear-gradient(to right, #ffffff, #f8faff);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card.current-day::before {
+            content: 'Сегодня';
+            position: absolute;
+            top: 10px;
+            right: -25px;
+            background: #4a6cff;
+            color: white;
+            padding: 5px 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .day-title {
-            font-size: 18px;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #4a6cff;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-card.current-day .day-title {
+            color: #2d4fcc;
+        }
+
+        .day-count {
+            background: #4a6cff;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .day-card.current-day .day-count {
+            background: #2d4fcc;
         }
 
         .lesson {
             border-left: 4px solid #4a6cff;
             background: #f7f8ff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .lesson:hover {
+            background: #f0f2ff;
         }
 
         .lesson.kp {
@@ -73,133 +213,439 @@
             background: #fff0f0;
         }
 
+        .lesson.kp:hover {
+            background: #ffe8e8;
+        }
+
+        .lesson.l {
+            border-left-color: #ff69b4;
+            background: #fff0f8;
+        }
+
+        .lesson.l:hover {
+            background: #ffe8f3;
+        }
+
         .lesson-time {
             font-weight: 700;
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 6px;
         }
 
         .lesson-name {
-            margin: 4px 0;
+            margin: 8px 0;
+            font-weight: 600;
+            line-height: 1.4;
         }
 
         .lesson-meta {
-            font-size: 13px;
-            color: #555;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .lesson-type {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .kp .lesson-type {
+            background: rgba(255, 74, 74, 0.15);
+            color: #d32f2f;
+        }
+
+        .l .lesson-type {
+            background: rgba(255, 105, 180, 0.15);
+            color: #c2185b;
+        }
+
+        .pz .lesson-type {
+            background: rgba(74, 108, 255, 0.15);
+            color: #303f9f;
         }
 
         .empty {
             color: #888;
             font-style: italic;
+            text-align: center;
+            padding: 30px 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .empty i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 30px;
+            border-top: 1px solid #e0e3eb;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .week-switch {
+                margin: 0 auto;
+            }
+            
+            .legend {
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            .schedule {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .day-card {
+                padding: 16px;
+            }
+            
+            .day-card.current-day::before {
+                top: 8px;
+                right: -28px;
+                font-size: 0.7rem;
+                padding: 4px 25px;
+            }
+            
+            .day-title {
+                font-size: 1.2rem;
+            }
+            
+            .lesson {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                justify-content: center;
+            }
+            
+            .controls {
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .week-switch {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .week-switch button {
+                flex: 1;
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            
+            .legend {
+                gap: 10px;
+                justify-content: space-between;
+            }
+            
+            .legend-item {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+            
+            .lesson-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .lesson-type {
+                align-self: flex-start;
+            }
+            
+            .day-card.current-day::before {
+                top: 6px;
+                right: -30px;
+                font-size: 0.65rem;
+                padding: 3px 22px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .day-card {
+                padding: 14px;
+            }
+            
+            .lesson {
+                padding: 10px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .legend-item {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .day-card.current-day::before {
+                display: none;
+            }
+            
+            .day-card.current-day::after {
+                content: 'Сегодня';
+                display: block;
+                background: #4a6cff;
+                color: white;
+                padding: 3px 10px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                border-radius: 4px;
+            }
         }
     </style>
 </head>
 <body>
-
-<h1>📚 Расписание занятий</h1>
-
-<div class="week-switch">
-    <button class="active" onclick="showWeek(1)">1 неделя</button>
-    <button onclick="showWeek(2)">2 неделя</button>
-</div>
-
-<div id="schedule" class="schedule"></div>
-
-<script>
-const data = {
-    1: {
-        "Понедельник": [
-            ["15:40-17:15", "Эконом. анализ деят. предприятия", "пз", "606/8"],
-            ["17:45-19:20", "Основы упр-ния интеллект. собств.", "пз", "606/8"],
-            ["19:30-21:05", "Основы упр-ния интеллект. собств.", "л", "316/8"]
-        ],
-        "Вторник": [
-            ["17:45-19:20", "Эконом. анализ деят. предприятия", "пз", "606/8"],
-            ["19:30-21:05", "Международная логистика", "пз", "608/8"]
-        ],
-        "Среда": [
-            ["12:00-13:35", "Международная логистика", "л", "316/8"],
-            ["13:55-15:30", "Международная логистика", "л", "606/8"],
-            ["15:40-17:15", "Хозяйственное право", "л", "419/1"]
-        ],
-        "Четверг": [
-            ["13:55-15:30", "Хозяйственное право", "пз", "606/8"],
-            ["15:40-17:15", "Хозяйственное право", "л", "316/8"],
-            ["17:45-19:20", "Международная логистика", "пз", "608/8"],
-            ["19:30-21:05", "Основы упр-ния интеллект. собств.", "л", "316/8"]
-        ],
-        "Пятница": [
-            ["12:00-13:35", "Эконом. анализ деят. предприятия", "кп", "316/8"],
-            ["13:55-15:30", "Эконом. анализ деят. предприятия", "л", "316/8"],
-            ["15:40-17:15", "Международная логистика", "л", "316/8"]
-        ],
-        "Суббота": [
-            ["12:00-13:35", "Эконом. анализ деят. предприятия", "л", "316/8"],
-            ["13:55-15:30", "Эконом. анализ деят. предприятия", "л", "316/8"]
-        ]
-    },
-    2: {
-        "Понедельник": [
-            ["15:40-17:15", "Эконом. анализ деят. предприятия", "пз", "606/8"],
-            ["17:45-19:20", "Основы упр-ния интеллект. собств.", "пз", "606/8"]
-        ],
-        "Вторник": [
-            ["17:45-19:20", "Эконом. анализ деят. предприятия", "пз", "606/8"],
-            ["19:30-21:05", "Международная логистика", "пз", "608/8"]
-        ],
-        "Среда": [
-            ["12:00-13:35", "Международная логистика", "л", "316/8"],
-            ["13:55-15:30", "Международная логистика", "л", "606/8"],
-            ["15:40-17:15", "Хозяйственное право", "л", "419/1"],
-            ["17:45-19:20", "Хозяйственное право", "пз", "449/1"]
-        ],
-        "Четверг": [
-            ["13:55-15:30", "Хозяйственное право", "пз", "606/8"],
-            ["15:40-17:15", "Хозяйственное право", "л", "316/8"],
-            ["17:45-19:20", "Международная логистика", "пз", "608/8"],
-            ["19:30-21:05", "Основы упр-ния интеллект. собств.", "л", "316/8"]
-        ],
-        "Пятница": [
-            ["12:00-13:35", "Международная логистика", "кп", "608/8"],
-            ["13:55-15:30", "Эконом. анализ деят. предприятия", "л", "316/8"],
-            ["15:40-17:15", "Международная логистика", "л", "316/8"]
-        ],
-        "Суббота": []
-    }
-};
-
-function showWeek(week) {
-    document.querySelectorAll('.week-switch button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.week-switch button')[week - 1].classList.add('active');
-
-    const container = document.getElementById('schedule');
-    container.innerHTML = '';
-
-    for (const day in data[week]) {
-        const dayCard = document.createElement('div');
-        dayCard.className = 'day-card';
-
-        dayCard.innerHTML = `<div class="day-title">${day}</div>`;
-
-        if (data[week][day].length === 0) {
-            dayCard.innerHTML += `<div class="empty">Нет пар</div>`;
-        } else {
-            data[week][day].forEach(lesson => {
-                const isKP = lesson[2].toLowerCase() === 'кп';
-                dayCard.innerHTML += `
-                    <div class="lesson ${isKP ? 'kp' : ''}">
-                        <div class="lesson-time">${lesson[0]}</div>
-                        <div class="lesson-name">${lesson[1]}</div>
-                        <div class="lesson-meta">${lesson[2].toUpperCase()} • Каб. ${lesson[3]}</div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1><i class="far fa-calendar-alt"></i> Расписание занятий</h1>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="week-switch">
+                    <button class="active" onclick="showWeek(1)">1 неделя</button>
+                    <button onclick="showWeek(2)">2 неделя</button>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-kp"></div>
+                        <span>Курсовой проект</span>
                     </div>
-                `;
+                    <div class="legend-item">
+                        <div class="legend-color legend-l"></div>
+                        <span>Лабораторная работа</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-pz"></div>
+                        <span>Практическое занятие</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="schedule" class="schedule"></div>
+    </main>
+
+    <footer class="container">
+        <!-- Текст удален по требованию -->
+    </footer>
+
+    <script>
+        const data = {
+            1: {
+                "Понедельник": [
+                    {time: "15:40-17:15", name: "Эконом. анализ деят. предприятия", type: "пз", room: "606/8"},
+                    {time: "17:45-19:20", name: "Основы упр-ния интеллект. собств.", type: "пз", room: "606/8"},
+                    {time: "19:30-21:05", name: "Основы упр-ния интеллект. собств.", type: "л", room: "316/8"}
+                ],
+                "Вторник": [
+                    {time: "17:45-19:20", name: "Эконом. анализ деят. предприятия", type: "пз", room: "606/8"},
+                    {time: "19:30-21:05", name: "Международная логистика", type: "пз", room: "608/8"}
+                ],
+                "Среда": [
+                    {time: "12:00-13:35", name: "Международная логистика", type: "л", room: "316/8"},
+                    {time: "13:55-15:30", name: "Международная логистика", type: "л", room: "606/8"},
+                    {time: "15:40-17:15", name: "Хозяйственное право", type: "л", room: "419/1"}
+                ],
+                "Четверг": [
+                    {time: "13:55-15:30", name: "Хозяйственное право", type: "пз", room: "606/8"},
+                    {time: "15:40-17:15", name: "Хозяйственное право", type: "л", room: "316/8"},
+                    {time: "17:45-19:20", name: "Международная логистика", type: "пз", room: "608/8"},
+                    {time: "19:30-21:05", name: "Основы упр-ния интеллект. собств.", type: "л", room: "316/8"}
+                ],
+                "Пятница": [
+                    {time: "12:00-13:35", name: "Эконом. анализ деят. предприятия", type: "кп", room: "316/8"},
+                    {time: "13:55-15:30", name: "Эконом. анализ деят. предприятия", type: "л", room: "316/8"},
+                    {time: "15:40-17:15", name: "Международная логистика", type: "л", room: "316/8"}
+                ],
+                "Суббота": [
+                    {time: "12:00-13:35", name: "Эконом. анализ деят. предприятия", type: "л", room: "316/8"},
+                    {time: "13:55-15:30", name: "Эконом. анализ деят. предприятия", type: "л", room: "316/8"}
+                ]
+            },
+            2: {
+                "Понедельник": [
+                    {time: "15:40-17:15", name: "Эконом. анализ деят. предприятия", type: "пз", room: "606/8"},
+                    {time: "17:45-19:20", name: "Основы упр-ния интеллект. собств.", type: "пз", room: "606/8"}
+                ],
+                "Вторник": [
+                    {time: "17:45-19:20", name: "Эконом. анализ деят. предприятия", type: "пз", room: "606/8"},
+                    {time: "19:30-21:05", name: "Международная логистика", type: "пз", room: "608/8"}
+                ],
+                "Среда": [
+                    {time: "12:00-13:35", name: "Международная логистика", type: "л", room: "316/8"},
+                    {time: "13:55-15:30", name: "Международная логистика", type: "л", room: "606/8"},
+                    {time: "15:40-17:15", name: "Хозяйственное право", type: "л", room: "419/1"},
+                    {time: "17:45-19:20", name: "Хозяйственное право", type: "пз", room: "449/1"}
+                ],
+                "Четверг": [
+                    {time: "13:55-15:30", name: "Хозяйственное право", type: "пз", room: "606/8"},
+                    {time: "15:40-17:15", name: "Хозяйственное право", type: "л", room: "316/8"},
+                    {time: "17:45-19:20", name: "Международная логистика", type: "пз", room: "608/8"},
+                    {time: "19:30-21:05", name: "Основы упр-ния интеллект. собств.", type: "л", room: "316/8"}
+                ],
+                "Пятница": [
+                    {time: "12:00-13:35", name: "Международная логистика", type: "кп", room: "608/8"},
+                    {time: "13:55-15:30", name: "Эконом. анализ деят. предприятия", type: "л", room: "316/8"},
+                    {time: "15:40-17:15", name: "Международная логистика", type: "л", room: "316/8"}
+                ],
+                "Суббота": []
+            }
+        };
+
+        // Функция для получения текущего дня недели на русском
+        function getCurrentDayInRussian() {
+            const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            const now = new Date();
+            
+            // Устанавливаем часовой пояс Минска (UTC+3)
+            const minskTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Minsk'}));
+            
+            return days[minskTime.getDay()];
+        }
+
+        // Функция для обновления времени Минска
+        function updateMinskTime() {
+            const now = new Date();
+            const minskTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Minsk'}));
+            
+            const timeString = minskTime.toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Europe/Minsk'
+            });
+            
+            const dateString = minskTime.toLocaleDateString('ru-RU', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'Europe/Minsk'
             });
         }
 
-        container.appendChild(dayCard);
-    }
-}
+        function showWeek(week) {
+            document.querySelectorAll('.week-switch button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.week-switch button')[week - 1].classList.add('active');
 
-showWeek(1);
-</script>
+            const container = document.getElementById('schedule');
+            container.innerHTML = '';
 
+            const daysOrder = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+            const currentDay = getCurrentDayInRussian();
+
+            daysOrder.forEach(day => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                
+                // Добавляем класс current-day, если это текущий день
+                if (day === currentDay) {
+                    dayCard.classList.add('current-day');
+                }
+
+                const lessons = data[week][day] || [];
+                
+                let dayContent = `<div class="day-title">${day}`;
+                
+                if (lessons.length > 0) {
+                    dayContent += `<span class="day-count">${lessons.length}</span>`;
+                }
+                
+                dayContent += `</div>`;
+
+                if (lessons.length === 0) {
+                    dayContent += `
+                        <div class="empty">
+                            <i class="far fa-calendar-times"></i>
+                            <div>В этот день пар нет</div>
+                        </div>
+                    `;
+                } else {
+                    lessons.forEach(lesson => {
+                        let typeClass = "pz";
+                        if (lesson.type.toLowerCase() === 'кп') typeClass = "kp";
+                        else if (lesson.type.toLowerCase() === 'л') typeClass = "l";
+                        
+                        dayContent += `
+                            <div class="lesson ${typeClass}">
+                                <div class="lesson-time">${lesson.time}</div>
+                                <div class="lesson-name">${lesson.name}</div>
+                                <div class="lesson-meta">
+                                    <span class="lesson-type">${lesson.type.toUpperCase()}</span>
+                                    <span>Каб. ${lesson.room}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                dayCard.innerHTML = dayContent;
+                container.appendChild(dayCard);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обновляем время при загрузке
+            updateMinskTime();
+            
+            // Обновляем время каждый час
+            setInterval(updateMinskTime, 3600);
+            
+            // Показываем первую неделю
+            showWeek(1);
+            
+            function handleResize() {
+                // Адаптивная логика при необходимости
+            }
+            
+            window.addEventListener('resize', handleResize);
+            handleResize();
+        });
+    </script>
 </body>
 </html>
